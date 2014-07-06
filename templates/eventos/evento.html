@@ -1,0 +1,28 @@
+{% extends "pagina-interna.html" %}
+{% load static %}
+{% block title %}{{ block.super }} | Evento {% endblock %}
+{% block tituloheader %}<a href="{% url 'eventos' %}">Eventos</a> | {{ object.titulo }}{% endblock %}
+
+{% block classbody %}pg-evento{% endblock %}
+{% block conteudointerno %}
+<p>{{ object.resumo }}</p>
+<p>{{ object.descricao }}</p>
+        <h3 class="header">Fotos </h3>
+<p style="text-align: center">
+{% load thumbnail %}
+{% for f in  object.foto_set.all %}
+    {% thumbnail f.foto "800x600" as big %} 
+    {% thumbnail f.foto "100x100" crop="center" as small %} 
+    <a href="{{ big.url }}" class="galeria"><img heigth="100px" src="{{ small.url }}"></a>
+    {% endthumbnail %}
+    {% endthumbnail %}
+{% endfor %}
+</p>
+
+<!--<p class="link" style="text-align:center"><a href="/eventos/">Outros Eventos</a></p> -->
+
+
+{% endblock %}
+
+
+

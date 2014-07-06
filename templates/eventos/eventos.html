@@ -1,0 +1,53 @@
+{% extends "pagina-interna.html" %}
+{% load static %}
+{% block title %}{{ block.super }} | Eventos {% endblock %}
+{% block tituloheader %}Eventos{% endblock %}
+
+{% block conteudointerno %}
+<div id="filters">
+  <a href="#selected" class='selected' data-filter="*">todos</a>
+  {% for k, c in categorias.items %}
+    <a href="#cat{{ c.id }}" data-filter=".cat{{ c.id}}">{{ c.nome }}</a>
+  {% endfor %}
+  <a href="#cat" data-filter=".cat">outros</a>
+  
+  <div class="clear"> </div>
+</div>
+
+  <div class="clear"> </div>
+<div id='eventos-iso'>
+{% load thumbnail %}
+    {% for ev in eventos %}
+    <div class='item cat{{ ev.categoria.id }}'>
+
+        <a href="{% url 'evento' ev.id %}">{% thumbnail ev.foto_principal "170x100" as im %}<img alt="{{ ev.categoria }}"  src="{{im.url}}" width="127px" height="86px" >{% endthumbnail %}</a>
+        <h3>{{ ev.titulo }}</h3>
+        <p>{{ ev.data|date:"j \d\e F \d\e Y"}}</p>       
+    </div>
+    {% endfor %}
+  </div>
+
+
+<div class="outer">
+<div id="pagination">
+    {% if eventos.has_previous %}
+            <a class='prev' href="?page={{ eventos.previous_page_number }}">prev</a>
+    {% endif %}
+
+    {% for p in eventos.paginator.page_range %}
+        {% if eventos.number == p %}
+            <span class='current'>{{eventos.number}}</span>
+        {% else %}
+            <a href="?page={{ p }}">{{ p }}</a>
+        {% endif %}
+    {% endfor %}
+
+    {% if eventos.has_next %}
+        <a class='next' href="?page={{ eventos.next_page_number }}">next</a>
+    {% endif %}
+</div>
+</div>
+{% endblock %}
+
+
+

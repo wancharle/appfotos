@@ -1,0 +1,21 @@
+{% load staticfiles %}
+
+    <h2 class="secao"><a href="/eventos/"><span>Eventos</span></a></h2>
+    <p class="setas">
+        <a href="#" data-cycle-context="#eventos-slide" data-cycle-cmd="prev" class="evprev prev"><prev</a>
+        <a href="#" data-cycle-context="#eventos-slide" data-cycle-cmd="next" class="evnext next">next</a>
+    </p>
+{% load thumbnail %}
+<div class="ciclo-eventos">
+    <ul id='eventos-carousel'>
+         {% for ev in eventos %}
+         <li><div class='evento'>
+                       <a href="{% url 'evento' ev.id %}">{% thumbnail ev.foto_principal "127x86" as im %}<img alt="{{ ev.categoria }}"  src="{{im.url}}" width="127px" height="86px" >{% endthumbnail %}
+            <h3>{{ ev.titulo }}</h3>
+             <p>{{ ev.resumo }}</p>
+             </a></div>
+        </li>
+         {% endfor %}
+    </ul>
+</div>
+<div class="clear">&nbsp;</div>
