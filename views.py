@@ -11,7 +11,7 @@ import os
 import zipfile
 import shutil
 
-from eventos.models import Evento, Foto
+from appfotos.models import Evento, Foto
 
 class UploadFotoForm(forms.Form):
     ids = forms.CharField(max_length=50)

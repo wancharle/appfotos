@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.http import HttpResponseRedirect
-from eventos.models import Evento, Foto, Categoria
+from appfotos.models import Evento, Foto, Categoria
 
 from image_cropping import ImageCroppingMixin
 from easy_thumbnails.files import get_thumbnailer
