@@ -3,17 +3,26 @@ from django.http import HttpResponseRedirect
 from appfotos.models import Evento, Foto, Categoria
 from image_cropping import ImageCroppingMixin
 from easy_thumbnails.files import get_thumbnailer
-
+from tinymce.widgets import TinyMCE
+from django import forms
 
 class FotoInline(admin.TabularInline):
     model = Foto
     fields = ('foto','legenda')
 
+
+class SuiteForm(forms.ModelForm):
+    descricao = forms.CharField(widget=TinyMCE(attrs={"rows":20,"cols":100}))
+    descricao_en = forms.CharField(widget=TinyMCE(attrs={"rows":20,"cols":100}))
+   
+    class Meta:
+        model = Evento
+
 class EventoAdmin(ImageCroppingMixin,admin.ModelAdmin):
     inlines = [FotoInline,] 
     actions = ['enviar_zip_de_fotos',]
     exclude = [ 'data','resumo']
-
+    form = SuiteForm
     list_display = ['titulo', 'categoria', 'imagem','galeria','ordem']
 
     def imagem(self,obj):
@@ -31,10 +40,9 @@ class EventoAdmin(ImageCroppingMixin,admin.ModelAdmin):
     def galeria(self,obj):
         gal = u""
         for f in obj.foto_set.all():
-            thumbnail_url = get_thumbnailer(obj.foto_principal).get_thumbnail({
+            thumbnail_url = get_thumbnailer(f.foto).get_thumbnail({
                 'size': (50, 50),
-                'box': obj.cropping,
-                'crop': True,
+                'crop': "center",
                 'detail': True,
                 }).url
             gal +=u"<img src='%s'> " % thumbnail_url

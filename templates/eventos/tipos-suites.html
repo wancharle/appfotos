@@ -1,0 +1,46 @@
+{% load staticfiles %}
+{% load i18n %}{% get_available_languages as LANGUAGES %}
+{% get_current_language as LANGUAGE_CODE %}
+{% load thumbnail %}
+
+    {% ifequal LANGUAGES.0.0 LANGUAGE_CODE %}
+         {% for tipo in tipos %}
+    <h2>{{ tipo.nome }}</h2>
+        <div>
+           <p>{{ tipo.info }}</p>
+            <p class="green">Conheça tudo sobre nossas {{ tipo.nome|lower}}!<br />
+		{% for suite in tipo.evento_set.all %}
+		
+		{% if forloop.last %}
+		 e  
+                <a href="/suites/?suite=s{{ suite.id}}">{{ suite.titulo }}</a>
+		{% else %}
+                <a href="/suites/?suite=s{{ suite.id}}">{{ suite.titulo }}</a>{% ifequal forloop.revcounter 2 %}{% else %},{% endifequal %}
+		{% endif %}
+		{% endfor %}
+            </p>
+            <p class="tarifa">Tarifa/dia: R$ <span class="preco">{{ tipo.preco }}</span></p>
+            <p class="clear"></p>
+    </div>
+       {% endfor %}
+    {% else %}
+         {% for tipo in tipos %}
+    <h2>{{ tipo.nome_en }}</h2>
+        <div>
+           <p>{{ tipo.info_en }}</p>
+            <p class="green">Check all about our {{ tipo.nome_en|lower }}!<br />
+		{% for suite in tipo.evento_set.all %}
+		
+		{% if forloop.last %}
+		 e  
+                <a href="/suites/?suite=s{{ suite.id}}">{{ suite.titulo }}</a>
+		{% else %}
+                <a href="/suites/?suite=s{{ suite.id}}">{{ suite.titulo }}</a>{% ifequal forloop.revcounter 2 %}{% else %},{% endifequal %}
+		{% endif %}
+		{% endfor %}
+            </p>
+            <p class="tarifa">Tarifa/dia: R$ <span class="preco">{{ tipo.preco }}</span></p>
+            <p class="clear"></p>
+    </div>
+       {% endfor %}
+{% endifequal %}

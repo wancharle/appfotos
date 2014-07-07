@@ -31,10 +31,11 @@ class Evento(models.Model):
     data = models.DateTimeField(verbose_name="data",null=True,blank=True)
     foto_principal = models.ImageField(upload_to=u"eventos/", help_text=u"imagem principal. Exemplo de proporção: 757px X 563px")
     cropping = ImageRatioField(u'foto_principal', '757x563')
-    ordem = models.IntegerField(default=1,null=True,blank=True)
+    ordem = models.IntegerField(default=1,null=True)
     
     class Meta:
         verbose_name = u"suíte"
+        ordering = ('ordem',)
 
     def __unicode__(self):
         return u"%s" % self.titulo
