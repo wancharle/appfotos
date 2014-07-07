@@ -1,36 +1,41 @@
 # -*- coding: utf-8 -*-
 from django.db import models
 from django.db.models import Q
-from paginas.models import Unidade
 from image_cropping import ImageRatioField
-from paginas.util import get_unidade__identificador
 
 class Categoria(models.Model):
     nome = models.CharField(max_length=20)
+    nome_en = models.CharField(max_length=20,verbose_name=u"nome em inglês")
+    info = models.TextField(help_text=u'informações sobre as suites desse tipo')
+    info_en = models.TextField(verbose_name=u"info em inglês",help_text=u'informações sobre as suites desse tipo')
+    preco = models.DecimalField(max_digits=8, decimal_places=2,help_text=u'preços da diarias para as suites deste tipo')
+    ordem = models.IntegerField(default=1,null=True,blank=True)
+    
+    class Meta:
+        verbose_name = u"tipo de suíte"		
+        verbose_name_plural = u"tipos de suítes"		
+        ordering = ('ordem',)
 
     def __unicode__(self):
         return u"%s" % self.nome
 
 
-class EventoManager(models.Manager):
-    def da_unidade(self,request):
-        unidade = get_unidade__identificador(request)
-        return self.filter(Q(unidade__isnull=True) | Q(unidade__identificador=unidade)).order_by("-data",'-unidade')
-
-
 class Evento(models.Model): 
-    unidade = models.ForeignKey(Unidade,blank=True,null=True)
     titulo = models.CharField(max_length=50)
-    resumo = models.CharField(max_length=100)
+    resumo = models.CharField(max_length=100,default=" ",null=True,blank=True)
     descricao = models.TextField()
+    descricao_en = models.TextField(verbose_name=u"descrição em inglês")
 
-    categoria = models.ForeignKey(Categoria,null=True,blank=True)
+    categoria = models.ForeignKey(Categoria,null=True,blank=False)
     
-    data = models.DateTimeField(verbose_name="data")
-    foto_principal = models.ImageField(upload_to="eventos/", help_text=u"imagem principal do evento. Exemplo de proporção: 170x X 100px")
-    cropping = ImageRatioField('foto_principal', '170x100')
+    data = models.DateTimeField(verbose_name="data",null=True,blank=True)
+    foto_principal = models.ImageField(upload_to=u"eventos/", help_text=u"imagem principal. Exemplo de proporção: 757px X 563px")
+    cropping = ImageRatioField(u'foto_principal', '757x563')
+    ordem = models.IntegerField(default=1,null=True,blank=True)
+    
+    class Meta:
+        verbose_name = u"suíte"
 
-    objects = EventoManager()
     def __unicode__(self):
         return u"%s" % self.titulo
 
@@ -40,8 +45,12 @@ class Evento(models.Model):
 class Foto(models.Model):
     evento = models.ForeignKey(Evento)
     legenda = models.CharField(max_length=150,null=True, blank=True)
-    foto = models.ImageField(upload_to="eventos/%Y/%m/%d/" )
-    cropping = ImageRatioField('foto', '800x600')
+    foto = models.ImageField(upload_to=u"eventos/%Y/%m/%d/" )
+    cropping = ImageRatioField('foto', '400x300',free_crop=True)
 
     def __unicode__(self):
         return u"%s - %s" % (self.evento.titulo, self.legenda)
+
+
+
+# vim: set ts=4 sw=4 sts=4 expandtab:
