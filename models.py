@@ -12,9 +12,11 @@ class Categoria(models.Model):
     ordem = models.IntegerField(default=1,null=True,blank=True)
     
     class Meta:
+        app_label = 'suites' 
         verbose_name = u"tipo de suíte"		
         verbose_name_plural = u"tipos de suítes"		
         ordering = ('ordem',)
+        db_table = 'appfotos_categoria'
 
     def __unicode__(self):
         return u"%s" % self.nome
@@ -31,11 +33,14 @@ class Evento(models.Model):
     data = models.DateTimeField(verbose_name="data",null=True,blank=True)
     foto_principal = models.ImageField(upload_to=u"eventos/", help_text=u"imagem principal. Exemplo de proporção: 757px X 563px")
     cropping = ImageRatioField(u'foto_principal', '757x563')
-    ordem = models.IntegerField(default=1,null=True)
+    ordem = models.IntegerField(null=True)
     
     class Meta:
         verbose_name = u"suíte"
         ordering = ('ordem',)
+        app_label = 'suites'
+        db_table = 'appfotos_evento'
+
 
     def __unicode__(self):
         return u"%s" % self.titulo
@@ -48,7 +53,10 @@ class Foto(models.Model):
     legenda = models.CharField(max_length=150,null=True, blank=True)
     foto = models.ImageField(upload_to=u"eventos/%Y/%m/%d/" )
     cropping = ImageRatioField('foto', '400x300',free_crop=True)
-
+    
+    class Meta:
+        app_label = 'suites'
+        db_table = 'appfotos_foto'
     def __unicode__(self):
         return u"%s - %s" % (self.evento.titulo, self.legenda)
 

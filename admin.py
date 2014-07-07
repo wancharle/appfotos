@@ -24,6 +24,8 @@ class EventoAdmin(ImageCroppingMixin,admin.ModelAdmin):
     exclude = [ 'data','resumo']
     form = SuiteForm
     list_display = ['titulo', 'categoria', 'imagem','galeria','ordem']
+    list_filter = ('categoria',)
+    search_fields = ('titulo','categoria__nome','categoria__nome_en')
 
     def imagem(self,obj):
         thumbnail_url = get_thumbnailer(obj.foto_principal).get_thumbnail({
