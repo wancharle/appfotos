@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import os
 from django.db import models
 from django.db.models import Q
 from image_cropping import ImageRatioField
@@ -51,7 +52,8 @@ class Foto(models.Model):
     cropping = ImageRatioField('foto', '400x300',free_crop=True)
     
     def __unicode__(self):
-        return u"%s - %s" % (self.evento.titulo, self.legenda)
+        
+        return u"%s - %s" % (self.evento.titulo,os.path.basename( self.foto.name))
 
 
 
